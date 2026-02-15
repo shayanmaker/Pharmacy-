@@ -1,110 +1,285 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shayan Pharmacy</title>
-
+<title>Shayan Pharmacy Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
 body{
-margin:0;
-font-family:Arial;
-background:url("https://images.unsplash.com/photo-1580281657527-47d8f5d8b6f7") no-repeat center center/cover;
+    margin:0;
+    font-family:'Roboto', sans-serif;
+    background:url("https://images.unsplash.com/photo-1580281657527-47d8f5d8b6f7") no-repeat center center/cover;
+    background-size: cover;
+    transition: 0.5s;
+    color:#333;
+}
+.dark-mode{
+    background:#1a1a1a;
+    color:white;
+}
+.container{
+    display:flex;
+    min-height:100vh;
 }
 
-/* LOGIN BOX */
-.box{
-width:320px;
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-margin:auto;
-margin-top:80px;
-text-align:center;
+/* Sidebar */
+.sidebar{
+    width:220px;
+    background:#111;
+    color:white;
+    padding:20px;
+}
+.sidebar h2{
+    color:#00d4ff;
+    margin-bottom:30px;
+    text-align:center;
+}
+.sidebar p, .sidebar button{
+    padding:10px;
+    cursor:pointer;
+    border-radius:5px;
+    border:none;
+    width:100%;
+    margin-bottom:10px;
+    text-align:left;
+}
+.sidebar p:hover, .sidebar button:hover{
+    background:#333;
 }
 
-input{
-width:90%;
-padding:10px;
-margin:8px;
-border-radius:8px;
-border:1px solid #ccc;
+/* Main dashboard */
+.main{
+    flex:1;
+    padding:20px;
+    background:rgba(255,255,255,0.95);
+    transition:0.5s;
 }
 
-button{
-padding:10px 20px;
-border:none;
-background:#007bff;
-color:white;
-border-radius:8px;
-cursor:pointer;
+/* Tabs */
+.tabs{
+    display:flex;
+    margin-bottom:15px;
+}
+.tab{
+    padding:10px 15px;
+    cursor:pointer;
+    background:#007bff;
+    color:white;
+    border-radius:5px 5px 0 0;
+    margin-right:5px;
+}
+.tab.active{
+    background:#0056b3;
 }
 
-button:hover{
-background:#0056b3;
+/* Search */
+#searchBar{
+    width:100%;
+    padding:10px;
+    margin-bottom:20px;
+    border-radius:8px;
+    border:1px solid #ccc;
 }
 
-/* DASHBOARD */
-#dashboard{
-display:none;
-background:#f4f6f9;
-min-height:100vh;
-padding:20px;
-}
-
+/* Cards */
 .card{
-background:white;
-padding:15px;
-margin:10px;
-border-radius:10px;
-box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    background:white;
+    padding:15px;
+    margin:10px;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    display:flex;
+    align-items:center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover{
+    transform: scale(1.03);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+.card img{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-right:15px;
+}
+.card-info{
+    flex:1;
+}
+.card-info input{
+    width:50px;
+    padding:5px;
+    margin-right:5px;
+}
+
+/* Invoice box */
+#invoiceBox{
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    margin-top:20px;
+}
+#invoiceBox button{
+    margin-top:10px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .container{
+        flex-direction:column;
+    }
+    .sidebar{
+        width:100%;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:space-around;
+    }
+    .main{
+        padding:10px;
+    }
 }
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage" class="box">
-<h2>Shayan Pharmacy</h2>
-
-<input type="text" id="loginUser" placeholder="Username">
-<input type="password" id="loginPass" placeholder="Password">
-<br>
-<button onclick="login()">Login</button>
-
-<hr>
-
-<h4>Sign Up</h4>
-<input type="text" id="newUser" placeholder="New Username">
-<input type="password" id="newPass" placeholder="New Password">
-<br>
-<button onclick="signup()">Sign Up</button>
-
-<p id="msg" style="color:red;"></p>
+<div class="container">
+<div class="sidebar">
+<h2>💊 SHAYAN</h2>
+<p onclick="showCategory('all')">Dashboard</p>
+<button onclick="toggleDarkMode()">Dark Mode</button>
+<button onclick="addMedicinePrompt()">Add Medicine</button>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard">
+<div class="main">
 <h2>Medicine Dashboard</h2>
 
-<div class="card">
-<h3>Paracetamol</h3>
-<p>Use: Fever, headache</p>
-<p>Price: Rs 50</p>
+<div class="tabs">
+<div class="tab active" onclick="filterCategory('all')">All</div>
+<div class="tab" onclick="filterCategory('Tablet')">Tablets</div>
+<div class="tab" onclick="filterCategory('Syrup')">Syrups</div>
+<div class="tab" onclick="filterCategory('Antibiotic')">Antibiotics</div>
 </div>
 
-<div class="card">
-<h3>Brufen</h3>
-<p>Use: Pain relief</p>
-<p>Price: Rs 80</p>
+<input type="text" id="searchBar" placeholder="Search medicine..." onkeyup="searchMedicine()">
+
+<div id="medicineList"></div>
+
+<div id="invoiceBox">
+<h3>Invoice</h3>
+<p id="billNumber">Bill No: #001</p>
+<div id="invoiceItems"></div>
+<p><strong>Total: Rs <span id="totalPrice">0</span></strong></p>
+<button onclick="printInvoice()">Print Invoice</button>
 </div>
 
-<div class="card">
-<h3>Augmentin</h3>
-<p>Use: Infection treatment</p>
-<p>Price: Rs 450</p>
 </div>
+</div>
+
+<script>
+// Preloaded Medicines
+let medicines = JSON.parse(localStorage.getItem("medicines")) || [
+    {name:"Paracetamol",category:"Tablet",use:"Fever, headache",price:50,stock:120,expiry:"12/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
+    {name:"Brufen",category:"Tablet",use:"Pain relief",price:80,stock:90,expiry:"03/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
+    {name:"Rigix Syrup",category:"Syrup",use:"Allergy, cold",price:120,stock:60,expiry:"11/2024",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
+    {name:"Augmentin",category:"Antibiotic",use:"Infection treatment",price:450,stock:40,expiry:"08/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"}
+];
+
+let billNo = 1;
+let invoiceItems=[];
+
+// Display medicines
+function displayMedicines(list){
+    localStorage.setItem("medicines", JSON.stringify(medicines));
+    let container = document.getElementById("medicineList");
+    container.innerHTML="";
+    list.forEach(med=>{
+        let div = document.createElement("div");
+        div.className="card";
+        div.innerHTML=`<img src="${med.img}" alt="${med.name}">
+        <div class="card-info">
+        <h3>${med.name}</h3>
+        <p>Category: ${med.category}</p>
+        <p>Use: ${med.use}</p>
+        <p>Price: Rs ${med.price}</p>
+        <p>Stock: ${med.stock}</p>
+        <p>Expiry: ${med.expiry}</p>
+        <input type="number" id="qty-${med.name}" placeholder="Qty" min="1">
+        <button onclick="addToInvoice('${med.name}',${med.price})">Add to Invoice</button>
+        </div>`;
+        container.appendChild(div);
+    });
+}
+
+// Filter category
+function filterCategory(cat){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    event.target.classList.add('active');
+    if(cat=="all") displayMedicines(medicines);
+    else displayMedicines(medicines.filter(m=>m.category==cat));
+}
+
+// Search
+function searchMedicine(){
+    let query = document.getElementById("searchBar").value.toLowerCase();
+    displayMedicines(medicines.filter(m=>m.name.toLowerCase().includes(query)));
+}
+
+// Invoice functions
+function addToInvoice(name,price){
+    let qty = parseInt(document.getElementById("qty-"+name).value) || 1;
+    invoiceItems.push({name:name,price:price,quantity:qty});
+    updateInvoice();
+}
+function updateInvoice(){
+    let container = document.getElementById("invoiceItems");
+    container.innerHTML="";
+    let total=0;
+    invoiceItems.forEach(item=>{
+        container.innerHTML+=`<p>${item.name} - Rs ${item.price} x ${item.quantity} = Rs ${item.price*item.quantity}</p>`;
+        total+=item.price*item.quantity;
+    });
+    document.getElementById("totalPrice").innerText=total;
+}
+function generateInvoice(){
+    billNo++;
+    document.getElementById("billNumber").innerText="Bill No: #"+billNo.toString().padStart(3,"0");
+    invoiceItems=[];
+    updateInvoice();
+}
+function printInvoice(){
+    let printContents = document.getElementById("invoiceBox").innerHTML;
+    let originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+}
+
+// Dark mode
+function toggleDarkMode(){
+    document.body.classList.toggle("dark-mode");
+}
+
+// Add Medicine
+function addMedicinePrompt(){
+    let name = prompt("Medicine Name:");
+    let cat = prompt("Category:");
+    let use = prompt("Use:");
+    let price = prompt("Price:");
+    let stock = prompt("Stock:");
+    let expiry = prompt("Expiry Date (MM/YYYY):");
+    let img = prompt("Image URL (or leave blank):") || "https://images.unsplash.com/photo-1588776814546-06ffec3c850b";
+    medicines.push({name:name,category:cat,use:use,price:parseFloat(price),stock:parseInt(stock),expiry:expiry,img:img});
+    displayMedicines(medicines);
+}
+
+// Initial display
+displayMedicines(medicines);
+</script>
+
+</body>
+</html></div>
 
 <div class="card">
 <h3>Rigix Syrup</h3>
@@ -151,3 +326,4 @@ document.getElementById("msg").innerText="Wrong login details";
 
 </body>
 </html>
+
