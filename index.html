@@ -3,269 +3,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shayan Pharmacy</title>
+<title>Shayan Movies HTML Only</title>
 <style>
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-  transition: background 1s;
-}
-.overlay{
-  position:absolute;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.5);
-  padding:20px;
-  box-sizing:border-box;
-}
-/* Header */
-header{
-  display:flex;
-  justify-content: space-between;
-  align-items:center;
-  padding:10px 20px;
-  background: rgba(0,0,0,0.5);
-  position: fixed;
-  width:100%;
-  top:0;
-  z-index:10;
-}
-header h1{ margin:0; font-size:2em; color:#00d4ff;}
-.menu-btn{
-  cursor:pointer;
-  font-size:1.2em;
-  background: rgba(0,212,255,0.2);
-  padding:8px 12px;
-  border-radius:5px;
-}
-
-/* Sidebar */
-.sidebar{
-  position: fixed;
-  top:0;
-  left: -250px;
-  width:250px;
-  height:100%;
-  background: rgba(0,0,0,0.95);
-  padding:20px;
-  box-sizing:border-box;
-  transition:0.3s;
-  z-index:20;
-}
-.sidebar.active{ left:0; }
-.sidebar h2{ color:#00d4ff; margin-bottom:15px;}
-.sidebar p{
-  cursor:pointer;
-  padding:10px;
-  border-radius:5px;
-  background: rgba(0,212,255,0.2);
-  margin-bottom:5px;
-}
-.sidebar p:hover{ background: rgba(0,212,255,0.5); color:#000; }
-
-/* Main Horizontal Cards */
-.main{
-  margin-top:80px;
-  padding:20px;
-  display:flex;
-  overflow-x: auto;
-  gap:15px;
-}
-.card{
-  min-width:250px;
-  height:300px;
-  background: rgba(255,255,255,0.95);
-  color:#000;
-  border-radius:10px;
-  flex-shrink:0;
-  display:flex;
-  flex-direction: column;
-  align-items:center;
-  justify-content: space-between;
-  text-align:center;
-  padding:10px;
-  box-sizing:border-box;
-}
-.card img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:10px;
-}
-.card h3{ margin:10px 0 5px;}
-.card p{ margin:2px 0; }
-
-/* Slide Box */
-.slide-box{
-  position: fixed;
-  top:0;
-  right: -450px;
-  width:450px;
-  height:100%;
-  background: rgba(0,0,0,0.95);
-  padding:20px;
-  box-sizing:border-box;
-  transition:0.3s;
-  overflow-y:auto;
-  z-index:15;
-}
-.slide-box.active{ right:0; }
-.slide-box h2{ color:#00d4ff; margin-bottom:15px; }
-.close-btn{
-  background:#00d4ff;
-  color:#000;
-  border:none;
-  padding:5px 10px;
-  cursor:pointer;
-  border-radius:5px;
-  margin-bottom:10px;
-}
-
-/* Form Inputs */
-.search-box input, .search-box button{
-  padding:8px;
-  margin-bottom:5px;
-  width:100%;
-  border-radius:5px;
-  border:none;
-}
-.search-box button{
-  background:#00d4ff;
-  color:#000;
-  cursor:pointer;
-}
-
-/* Scrollbar */
-.main::-webkit-scrollbar{ height:12px;}
-.main::-webkit-scrollbar-thumb{ background:#00d4ff; border-radius:6px;}
+body{margin:0;font-family:Arial;background:#111;color:#fff;}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#000;position:sticky;top:0;z-index:10;}
+header h1{margin:0;color:#00d4ff;}
+.search-box input{padding:8px;width:250px;border:none;border-radius:5px;}
+.categories-container{padding:10px 0 0 20px;}
+.category-title{font-size:18px;margin-bottom:5px;}
+.category{display:flex;gap:15px;overflow-x:auto;padding-bottom:20px;}
+.category::-webkit-scrollbar{height:8px;}
+.category::-webkit-scrollbar-thumb{background:#00d4ff;border-radius:4px;}
+.card{min-width:180px;background:#222;border-radius:10px;overflow:hidden;text-align:center;cursor:pointer;transition:transform 0.3s;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:270px;object-fit:cover;}
+.card h3{font-size:14px;padding:5px;margin:0;}
+.card p{font-size:12px;color:#ccc;margin:0 0 5px 0;}
+.hero-slider{position:relative;width:100%;height:350px;overflow:hidden;margin-bottom:20px;}
+.hero-slider img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;opacity:0;transition:opacity 1s;}
+.hero-slider img.active{opacity:1;}
+#popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:20;overflow:auto;}
+#popup img{width:300px;border-radius:10px;margin-bottom:10px;}
+#popup h2{margin:10px 0;}
+#popup p{max-width:600px;text-align:center;}
+#popup iframe{width:560px;height:315px;margin-top:15px;border:none;}
+#popup button{margin-top:15px;padding:10px 20px;background:#00d4ff;border:none;cursor:pointer;border-radius:5px;}
 </style>
 </head>
 <body>
 
-<div class="overlay">
-
 <header>
-  <h1>Shayan Pharmacy</h1>
-  <div class="menu-btn" onclick="toggleSidebar()">☰ Menu</div>
+<h1>Shayan Movies</h1>
+<div class="search-box">
+<input type="text" id="search" placeholder="Search movie..." onkeyup="searchMovie()">
+</div>
 </header>
 
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-  <h2>Menu</h2>
-  <p onclick="openSlide('medicine')">Medicine</p>
-  <p onclick="openSlide('invoice')">Invoice</p>
-  <p onclick="openSlide('add')">Add Medicine</p>
-  <p onclick="openSlide('orders')">Orders</p>
-  <p onclick="openSlide('contact')">Contact</p>
-</div>
+<div class="hero-slider" id="heroSlider"></div>
+<div class="categories-container" id="categoriesContainer"></div>
 
-<!-- Main Horizontal Cards -->
-<div class="main" id="medicineContainer"></div>
-
-<!-- Slide Box -->
-<div class="slide-box" id="slideBox">
-  <button class="close-btn" onclick="closeSlide()">Close</button>
-  <div id="slideContent"><p>Select menu option</p></div>
-</div>
-
+<div id="popup">
+<button onclick="closePopup()">Close</button>
+<img id="popupImg" src="">
+<h2 id="popupTitle"></h2>
+<p id="popupOverview"></p>
+<iframe id="trailerFrame" src="" allowfullscreen></iframe>
 </div>
 
 <script>
-// Background images auto-change
-const backgrounds = [
-  'https://cdn.pixabay.com/photo/2020/03/11/18/28/doctor-650534_1920.jpg',
-  'https://cdn.pixabay.com/photo/2016/11/29/05/08/medication-1866782_1280.jpg',
-  'https://cdn.pixabay.com/photo/2017/09/02/19/41/syrup-2700711_1280.jpg'
-];
-let bgIndex=0;
-function changeBackground(){
-  document.body.style.background=`url('${backgrounds[bgIndex]}') no-repeat center center fixed`;
-  document.body.style.backgroundSize='cover';
-  bgIndex=(bgIndex+1)%backgrounds.length;
-}
-setInterval(changeBackground,5000);
-changeBackground();
+// ------------------ SAMPLE DATA ------------------
+const categories = ['Popular','Top Rated','Upcoming'];
+const IMG_PATH = "https://source.unsplash.com/200x270/?movie,cinema,poster"; // Placeholder images
+const moviesData = {};
 
-// Generate 200 medicines with name + images
-let medicines=[];
-for(let i=1;i<=200;i++){
-  medicines.push({
-    name:`Medicine ${i}`,
-    use:`For condition ${i}`,
-    price:Math.floor(Math.random()*500)+50,
-    img:`https://source.unsplash.com/200x150/?medicine,drug,tablet,${i}`
-  });
-}
-
-// Render medicine cards
-function renderMedicines(filter=''){
-  const container=document.getElementById('medicineContainer');
-  container.innerHTML='';
-  let filtered=medicines.filter(m=>m.name.toLowerCase().includes(filter.toLowerCase()));
-  filtered.forEach(m=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`<img src="${m.img}" alt="${m.name}">
-      <h3>${m.name}</h3>
-      <p>Use: ${m.use}</p>
-      <p>Price: Rs ${m.price}</p>`;
-    container.appendChild(card);
-  });
-}
-renderMedicines();
-
-// Sidebar toggle
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Slide Box
-function openSlide(option){
-  document.getElementById('slideBox').classList.add('active');
-  const content=document.getElementById('slideContent');
-  if(option==='medicine'){
-    content.innerHTML='<h2>Medicine List</h2>';
-    medicines.forEach(m=>{
-      content.innerHTML+=`<p><strong>${m.name}</strong><br>Use: ${m.use}<br>Price: Rs ${m.price}</p><hr>`;
+// Generate 20 sample movies per category
+categories.forEach(cat=>{
+  moviesData[cat]=[];
+  for(let i=1;i<=20;i++){
+    moviesData[cat].push({
+      title:`${cat} Movie ${i}`,
+      overview:`Description for ${cat} Movie ${i}. This is a sample overview.`,
+      poster_path:IMG_PATH+"?"+i,
+      trailer:`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(cat+' Movie '+i+' trailer')}`,
+      rating:(Math.random()*5+5).toFixed(1)
     });
-  } else if(option==='invoice'){
-    content.innerHTML='<h2>Invoice</h2>';
-    medicines.slice(0,20).forEach((m,i)=>{
-      content.innerHTML+=`<p>Invoice #00${i+1}<br>${m.name} x1 - Rs ${m.price}</p><hr>`;
-    });
-  } else if(option==='add'){
-    content.innerHTML=`<h2>Add Medicine</h2>
-      <div class="search-box">
-        <input type="text" id="medName" placeholder="Medicine Name">
-        <input type="text" id="medUse" placeholder="Use">
-        <input type="number" id="medPrice" placeholder="Price">
-        <input type="text" id="medImg" placeholder="Image URL">
-        <button onclick="addMedicine()">Add</button>
-      </div>`;
-  } else if(option==='orders'){
-    content.innerHTML='<h2>Orders</h2><p>No orders yet.</p>';
-  } else if(option==='contact'){
-    content.innerHTML='<h2>Contact</h2><p>Email: info@shayanpharmacy.com</p><p>Phone: 0300-XXXXXXX</p>';
   }
-}
-function closeSlide(){
-  document.getElementById('slideBox').classList.remove('active');
+});
+
+// ------------------ HERO SLIDER ------------------
+let heroIndex=0;
+function showHeroSlider(){
+  const slider=document.getElementById('heroSlider');
+  slider.innerHTML='';
+  const heroMovies = moviesData['Popular'].slice(0,5);
+  heroMovies.forEach((m,i)=>{
+    const img=document.createElement('img');
+    img.src=m.poster_path;
+    if(i===0) img.classList.add('active');
+    slider.appendChild(img);
+  });
+  setInterval(()=>{
+    const imgs=slider.querySelectorAll('img');
+    imgs.forEach(im=>im.classList.remove('active'));
+    imgs[heroIndex].classList.add('active');
+    heroIndex=(heroIndex+1)%imgs.length;
+  },4000);
 }
 
-// Add medicine dynamically
-function addMedicine(){
-  const name=document.getElementById('medName').value;
-  const use=document.getElementById('medUse').value;
-  const price=document.getElementById('medPrice').value;
-  const img=document.getElementById('medImg').value;
-  if(name && use && price && img){
-    medicines.push({name,use,price,img});
-    renderMedicines();
-    alert('Medicine added!');
-  } else { alert('Fill all fields'); }
+// ------------------ RENDER CATEGORIES ------------------
+function renderCategories(){
+  const container=document.getElementById('categoriesContainer');
+  categories.forEach(cat=>{
+    const div=document.createElement('div');
+    div.innerHTML=`<div class="category-title">${cat}</div><div class="category" id="cat-${cat}"></div>`;
+    container.appendChild(div);
+    const catDiv=document.getElementById(`cat-${cat}`);
+    moviesData[cat].forEach(m=>{
+      const card=document.createElement('div');
+      card.classList.add('card');
+      card.innerHTML=`<img src="${m.poster_path}"><h3>${m.title}</h3><p>Rating: ${m.rating}</p>`;
+      card.onclick=()=>openPopup(m);
+      catDiv.appendChild(card);
+    });
+  });
 }
+
+// ------------------ SEARCH ------------------
+function searchMovie(){
+  const query=document.getElementById('search').value.toLowerCase();
+  categories.forEach(cat=>{
+    const catDiv=document.getElementById(`cat-${cat}`);
+    catDiv.innerHTML='';
+    moviesData[cat].filter(m=>m.title.toLowerCase().includes(query)).forEach(m=>{
+      const card=document.createElement('div');
+      card.classList.add('card');
+      card.innerHTML=`<img src="${m.poster_path}"><h3>${m.title}</h3><p>Rating: ${m.rating}</p>`;
+      card.onclick=()=>openPopup(m);
+      catDiv.appendChild(card);
+    });
+  });
+}
+
+// ------------------ POPUP ------------------
+function openPopup(movie){
+  document.getElementById('popup').style.display='flex';
+  document.getElementById('popupImg').src=movie.poster_path;
+  document.getElementById('popupTitle').innerText=movie.title;
+  document.getElementById('popupOverview').innerText=movie.overview;
+  document.getElementById('trailerFrame').src=movie.trailer;
+}
+function closePopup(){
+  document.getElementById('popup').style.display='none';
+  document.getElementById('trailerFrame').src='';
+}
+
+// ------------------ INITIALIZE ------------------
+showHeroSlider();
+renderCategories();
 </script>
 
 </body>
