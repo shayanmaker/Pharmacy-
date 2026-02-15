@@ -3,181 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <title>Shayan Movies</title>
-
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:white;
-overflow-x:hidden;
-}
-
-/* WELCOME SCREEN */
-#welcome{
-position:fixed;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-z-index:10;
-}
-
-#welcome h1{
-font-size:40px;
-letter-spacing:3px;
-color:#00e5ff;
-}
-
-#enterBtn{
-padding:15px 30px;
-font-size:18px;
-cursor:pointer;
-border:none;
-background:#00e5ff;
-}
-
-.spinner{
-border:6px solid #333;
-border-top:6px solid #00e5ff;
-border-radius:50%;
-width:60px;
-height:60px;
-animation:spin 1s linear infinite;
-display:none;
-margin-top:20px;
-}
-
-@keyframes spin{
-100%{transform:rotate(360deg);}
-}
-
-/* SIDEBAR */
-.sidebar{
-position:fixed;
-left:0;
-top:0;
-width:220px;
-height:100%;
-background:#111;
-padding-top:20px;
-}
-
-.sidebar h2{
-text-align:center;
-color:#00e5ff;
-}
-
-.sidebar button{
-display:block;
-width:100%;
-padding:12px;
-background:none;
-border:none;
-color:white;
-text-align:left;
-cursor:pointer;
-border-bottom:1px solid #222;
-}
-
-.sidebar button:hover{
-background:#00e5ff;
-color:black;
-}
-
-/* MAIN */
-.main{
-margin-left:220px;
-padding:20px;
-}
-
-/* MOVIES */
-.row{
-display:flex;
-overflow-x:auto;
-gap:15px;
-padding-bottom:20px;
-}
-
-.card{
-min-width:180px;
-background:#111;
-border-radius:10px;
-overflow:hidden;
-cursor:pointer;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-}
-
-.card img{
-width:100%;
-height:260px;
-object-fit:cover;
-}
-
-.card h4{
-margin:5px;
-font-size:14px;
-}
-
-/* POPUP */
-.popup{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.95);
-display:none;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-}
-
-.popup iframe{
-width:560px;
-height:315px;
-}
-
-.closeBtn{
-margin-top:10px;
-padding:10px 20px;
-background:#00e5ff;
-border:none;
-cursor:pointer;
-}
-
+body{margin:0;font-family:Arial;background:#000;color:white;}
+#welcome{position:fixed;width:100%;height:100%;background:black;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;}
+#welcome h1{font-size:40px;letter-spacing:3px;color:#00e5ff;}
+#enterBtn{padding:15px 30px;font-size:18px;cursor:pointer;border:none;background:#00e5ff;}
+.spinner{border:6px solid #333;border-top:6px solid #00e5ff;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;display:none;margin-top:20px;}
+@keyframes spin{100%{transform:rotate(360deg);}}
+.header{background:black;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;}
+.logo{font-size:26px;font-weight:bold;color:#00e5ff;}
+.search input{padding:8px;width:220px;border-radius:5px;border:none;}
+.categories{background:#111;padding:10px;display:flex;gap:10px;overflow-x:auto;}
+.categories button{background:#222;color:white;border:none;padding:8px 15px;cursor:pointer;border-radius:5px;}
+.categories button:hover{background:#00e5ff;color:black;}
+.section{padding:20px;}
+.row{display:flex;gap:12px;overflow-x:auto;}
+.card{min-width:180px;background:#111;border-radius:8px;overflow:hidden;cursor:pointer;transition:0.3s;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:260px;object-fit:cover;}
+.card p{margin:5px;font-size:14px;}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;align-items:center;justify-content:center;flex-direction:column;}
+.popup iframe{width:560px;height:315px;}
+.closeBtn{margin-top:10px;padding:10px 20px;background:#00e5ff;border:none;cursor:pointer;}
 </style>
 </head>
-
 <body>
 
-<!-- WELCOME SCREEN -->
+<!-- WELCOME -->
 <div id="welcome">
-<h1>Welcome To Movie Site</h1>
+<h1>Welcome To Shayan Movies</h1>
 <button id="enterBtn" onclick="enterSite()">Enter</button>
 <div class="spinner" id="spinner"></div>
 </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-<h2>Shayan Website</h2>
-<button onclick="scrollTop()">Dashboard</button>
-<button onclick="scrollMovies()">Movies</button>
+<!-- HEADER -->
+<div class="header">
+<div class="logo">SHAYAN MOVIES</div>
+<div class="search">
+<input type="text" placeholder="Search..." id="search" onkeyup="searchMovies()">
+</div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<!-- CATEGORY -->
+<div class="categories">
+<button onclick="loadCategory('popular')">Popular</button>
+<button onclick="loadCategory('top_rated')">Top Rated</button>
+<button onclick="loadCategory('upcoming')">Upcoming</button>
+</div>
 
-<h1>Latest Movies</h1>
+<!-- MOVIE SECTION -->
+<div class="section">
 <div class="row" id="movieRow"></div>
-
 </div>
 
 <!-- POPUP -->
@@ -187,43 +63,46 @@ cursor:pointer;
 </div>
 
 <script>
-
-/* ENTER ANIMATION */
-function enterSite(){
-document.getElementById("spinner").style.display="block";
-setTimeout(()=>{
-document.getElementById("welcome").style.display="none";
-},1500);
-}
-
-/* MOVIE DATA (sample posters + trailers) */
-const sampleMovies=[
-{title:"Avengers",poster:"https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",trailer:"https://www.youtube.com/embed/eOrNdBpGMv8"},
-{title:"Joker",poster:"https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",trailer:"https://www.youtube.com/embed/zAGVQLHvwOY"},
-{title:"Batman",poster:"https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",trailer:"https://www.youtube.com/embed/mqqft2x_Aa4"},
-{title:"Jawan",poster:"https://image.tmdb.org/t/p/w500/jFt1gS4BGHlK8xt76Y81Alp4dbt.jpg",trailer:"https://www.youtube.com/embed/k8YiqM0Y-78"}
-];
-
-/* GENERATE 200+ MOVIES */
+const apiKey="496527c1336bcfb364c75c19dfe05c1c";
 const movieRow=document.getElementById("movieRow");
+let allMovies=[];
 
-for(let i=0;i<60;i++){
-sampleMovies.forEach(m=>{
-const card=document.createElement("div");
-card.className="card";
-card.innerHTML=`
-<img src="${m.poster}">
-<h4>${m.title} ${i+1}</h4>
-`;
-card.onclick=()=>playTrailer(m.trailer);
-movieRow.appendChild(card);
-});
+async function fetchMovies(category){
+  const url=`https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&language=en-US&page=1`;
+  const res=await fetch(url);
+  const data=await res.json();
+  return data.results;
 }
 
-/* TRAILER */
-function playTrailer(link){
-document.getElementById("popup").style.display="flex";
-document.getElementById("trailerFrame").src=link;
+async function loadCategory(category){
+  const movies=await fetchMovies(category);
+  allMovies=movies; // save for search
+  renderMovies(movies);
+}
+
+function renderMovies(movies){
+  movieRow.innerHTML="";
+  movies.forEach(m=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`<img src="https://image.tmdb.org/t/p/w500${m.poster_path}"><p>${m.title}</p>`;
+    card.onclick=()=>playTrailer(m.id);
+    movieRow.appendChild(card);
+  });
+}
+
+/* Trailer Popup via TMDB + YouTube */
+async function playTrailer(movieId){
+  const url=`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+  const res=await fetch(url);
+  const data=await res.json();
+  const yt=data.results.find(v=>v.site==="YouTube" && v.type==="Trailer");
+  if(yt){
+    document.getElementById("trailerFrame").src=`https://www.youtube.com/embed/${yt.key}`;
+    document.getElementById("popup").style.display="flex";
+  }else{
+    alert("Trailer not found");
+  }
 }
 
 function closeTrailer(){
@@ -231,15 +110,21 @@ document.getElementById("popup").style.display="none";
 document.getElementById("trailerFrame").src="";
 }
 
-/* DASHBOARD BUTTON */
-function scrollTop(){
-window.scrollTo({top:0,behavior:"smooth"});
+/* SEARCH */
+function searchMovies(){
+const q=document.getElementById("search").value.toLowerCase();
+const filtered=allMovies.filter(m=>m.title.toLowerCase().includes(q));
+renderMovies(filtered);
 }
 
-function scrollMovies(){
-document.getElementById("movieRow").scrollIntoView({behavior:"smooth"});
+/* Welcome Animation */
+function enterSite(){
+document.getElementById("spinner").style.display="block";
+setTimeout(()=>{
+document.getElementById("welcome").style.display="none";
+loadCategory('popular');
+},1500);
 }
-
 </script>
 
 </body>
