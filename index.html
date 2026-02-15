@@ -1,21 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Shayan Movies</title>
+<title>Shayan Site</title>
 <style>
 body{margin:0;font-family:Arial;background:#000;color:white;overflow-x:hidden;}
-
-/* BACKGROUND IMAGES */
-#bg{
-position:fixed;
-top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;
-}
-#bg img{
-position:absolute;width:120%;height:120%;object-fit:cover;filter:blur(20px) brightness(0.3);animation:moveBg 120s linear infinite;
-}
-@keyframes moveBg{0%{transform:translate(0,0);}100%{transform:translate(-20%, -20%);}}
-
+/* BACKGROUND */
+#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;}
+#bg img{position:absolute;width:120%;height:120%;object-fit:cover;filter:blur(20px) brightness(0.2);animation:moveBg 120s linear infinite;}
+#bg span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:120px;color:rgba(0,255,255,0.1);font-weight:bold;letter-spacing:5px;}
+@keyframes moveBg{0%{transform:translate(0,0);}100%{transform:translate(-20%,-20%);}}
+/* WELCOME */
 #welcome{position:fixed;width:100%;height:100%;background:black;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;}
 #welcome h1{font-size:40px;letter-spacing:3px;color:#00e5ff;}
 #enterBtn{padding:15px 30px;font-size:18px;cursor:pointer;border:none;background:#00e5ff;}
@@ -45,7 +40,7 @@ position:absolute;width:120%;height:120%;object-fit:cover;filter:blur(20px) brig
 .card img{width:100%;height:260px;object-fit:cover;}
 .card p{margin:5px;font-size:14px;}
 
-/* TIKTOK / SHORTS SECTION */
+/* SHORTS SECTION */
 #shortsSection{height:400px;overflow-y:auto;margin-top:20px;border-top:1px solid #333;padding-top:10px;}
 .shortCard{margin-bottom:10px;background:#111;border-radius:8px;overflow:hidden;padding:5px;}
 
@@ -57,16 +52,17 @@ position:absolute;width:120%;height:120%;object-fit:cover;filter:blur(20px) brig
 </head>
 <body>
 
-<!-- BACKGROUND IMAGES -->
+<!-- BACKGROUND -->
 <div id="bg">
 <img src="https://images.unsplash.com/photo-1578894386800-63263d6f5147?q=80&w=1600">
 <img src="https://images.unsplash.com/photo-1601582584029-3b1e83b4a4df?q=80&w=1600">
 <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=1600">
+<span>Shayan Site</span>
 </div>
 
 <!-- WELCOME -->
 <div id="welcome">
-<h1>Welcome To Shayan Movies</h1>
+<h1>Welcome To Shayan Site</h1>
 <button id="enterBtn" onclick="enterSite()">Enter</button>
 <div class="spinner" id="spinner"></div>
 </div>
@@ -127,8 +123,8 @@ loadShorts();
 }
 
 /* FETCH MOVIES */
-async function fetchMovies(category){
-const url=`https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&language=en-US&page=1`;
+async function fetchMovies(category,page=1){
+const url=`https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&language=en-US&page=${page}`;
 const res=await fetch(url);
 const data=await res.json();
 return data.results;
@@ -173,11 +169,12 @@ current=(current+1)%slides.length;
 
 /* SHORTS SECTION */
 async function loadShorts(){
+shortsSection.innerHTML="";
 const movies=await fetchMovies('upcoming');
 movies.slice(0,20).forEach(m=>{
 const shortCard=document.createElement("div");
 shortCard.className="shortCard";
-shortCard.innerHTML=`<iframe width="320" height="180" src="https://www.youtube.com/embed/${m.id}?autoplay=1&mute=1"></iframe><p>${m.title}</p>`;
+shortCard.innerHTML=`<iframe width="320" height="180" src="https://www.youtube.com/embed/${m.id}?autoplay=1&mute=1&controls=0"></iframe><p>${m.title}</p>`;
 shortsSection.appendChild(shortCard);
 });
 }
