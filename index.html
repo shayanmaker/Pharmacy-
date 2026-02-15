@@ -4,521 +4,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shayan Pharmacy</title>
-<link href="style.css" rel="stylesheet">
-</head>
-<body>
-<div class="landing">
-    <div class="overlay">
-        <h1>Welcome to Shayan Pharmacy</h1>
-        <p>Your trusted online pharmacy in Pakistan</p>
-        <button onclick="enterDashboard()">Enter</button>
-    </div>
-</div>
+<style>
+  /* Background */
+  body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: url('https://cdn.pixabay.com/photo/2020/03/11/18/28/doctor-650534_1920.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    overflow-x: hidden;
+  }
 
-<script>
-function enterDashboard(){
-    window.location.href="dashboard.html";
-}
-</script>
-</body>
-</html>.card-info{
-    flex:1;
-}
-.card-info input{
-    width:50px;
-    padding:5px;
-    margin-right:5px;
-}
+  /* Overlay */
+  .overlay {
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+  }
 
-/* Invoice box */
-#invoiceBox{
-    background:#f8f9fa;
-    padding:15px;
+  /* Header */
+  header {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.5);
+    position: fixed;
+    width: 100%;
+    top:0;
+    z-index: 10;
+  }
+  header h1 { margin:0; font-size: 2em; color:#00d4ff; }
+  header button {
+    padding: 10px 15px;
+    background: #00d4ff;
+    border:none;
+    color:#000;
+    cursor:pointer;
+    border-radius:5px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top:60px;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    padding:20px;
+    transition: 0.3s;
+  }
+  .sidebar.active { left:0; }
+  .sidebar h2 { color:#00d4ff; margin-bottom:20px; }
+  .sidebar p { padding:10px; cursor:pointer; background: rgba(255,255,255,0.1); border-radius:5px; margin-bottom:10px; }
+  .sidebar p:hover { background: rgba(0,212,255,0.3); }
+
+  /* Main Content */
+  .main {
+    margin-top:80px;
+    padding:20px;
+    display:flex;
+    overflow-x: auto;
+    gap:15px;
+  }
+
+  .card {
+    min-width:200px;
+    background: rgba(255,255,255,0.9);
+    color:#000;
     border-radius:10px;
-    margin-top:20px;
-}
-#invoiceBox button{
-    margin-top:10px;
-}
-
-/* Responsive */
-@media(max-width:768px){
-    .container{
-        flex-direction:column;
-    }
-    .sidebar{
-        width:100%;
-        display:flex;
-        flex-wrap:wrap;
-        justify-content:space-around;
-    }
-    .main{
-        padding:10px;
-    }
-}
+    padding:15px;
+    flex-shrink:0;
+    text-align:center;
+  }
+  .card img { width:100%; height:120px; object-fit:cover; border-radius:10px; }
+  .card h3 { margin:10px 0 5px; }
+  .card p { margin:5px 0; }
 </style>
 </head>
 <body>
 
-<div class="container">
-<div class="sidebar">
-<h2>💊 SHAYAN</h2>
-<p onclick="showCategory('all')">Dashboard</p>
-<button onclick="toggleDarkMode()">Dark Mode</button>
-<button onclick="addMedicinePrompt()">Add Medicine</button>
-</div>
+<div class="overlay">
+  <header>
+    <h1>Shayan Pharmacy</h1>
+    <button onclick="toggleSidebar()">☰ Menu</button>
+  </header>
 
-<div class="main">
-<h2>Medicine Dashboard</h2>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Dashboard</h2>
+    <p onclick="alert('Medicine Details')">Medicine</p>
+    <p onclick="alert('Invoice Section')">Invoice</p>
+    <p onclick="alert('Add Medicine')">Add Medicine</p>
+  </div>
 
-<div class="tabs">
-<div class="tab active" onclick="filterCategory('all')">All</div>
-<div class="tab" onclick="filterCategory('Tablet')">Tablets</div>
-<div class="tab" onclick="filterCategory('Syrup')">Syrups</div>
-<div class="tab" onclick="filterCategory('Antibiotic')">Antibiotics</div>
-</div>
-
-<input type="text" id="searchBar" placeholder="Search medicine..." onkeyup="searchMedicine()">
-
-<div id="medicineList"></div>
-
-<div id="invoiceBox">
-<h3>Invoice</h3>
-<p id="billNumber">Bill No: #001</p>
-<div id="invoiceItems"></div>
-<p><strong>Total: Rs <span id="totalPrice">0</span></strong></p>
-<button onclick="printInvoice()">Print Invoice</button>
-</div>
-
-</div>
-</div>
-
-<script>
-// Preloaded Medicines
-let medicines = JSON.parse(localStorage.getItem("medicines")) || [
-    {name:"Paracetamol",category:"Tablet",use:"Fever, headache",price:50,stock:120,expiry:"12/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
-    {name:"Brufen",category:"Tablet",use:"Pain relief",price:80,stock:90,expiry:"03/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
-    {name:"Rigix Syrup",category:"Syrup",use:"Allergy, cold",price:120,stock:60,expiry:"11/2024",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"},
-    {name:"Augmentin",category:"Antibiotic",use:"Infection treatment",price:450,stock:40,expiry:"08/2025",img:"https://images.unsplash.com/photo-1588776814546-06ffec3c850b"}
-];
-
-let billNo = 1;
-let invoiceItems=[];
-
-// Display medicines
-function displayMedicines(list){
-    localStorage.setItem("medicines", JSON.stringify(medicines));
-    let container = document.getElementById("medicineList");
-    container.innerHTML="";
-    list.forEach(med=>{
-        let div = document.createElement("div");
-        div.className="card";
-        div.innerHTML=`<img src="${med.img}" alt="${med.name}">
-        <div class="card-info">
-        <h3>${med.name}</h3>
-        <p>Category: ${med.category}</p>
-        <p>Use: ${med.use}</p>
-        <p>Price: Rs ${med.price}</p>
-        <p>Stock: ${med.stock}</p>
-        <p>Expiry: ${med.expiry}</p>
-        <input type="number" id="qty-${med.name}" placeholder="Qty" min="1">
-        <button onclick="addToInvoice('${med.name}',${med.price})">Add to Invoice</button>
-        </div>`;
-        container.appendChild(div);
-    });
-}
-
-// Filter category
-function filterCategory(cat){
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    event.target.classList.add('active');
-    if(cat=="all") displayMedicines(medicines);
-    else displayMedicines(medicines.filter(m=>m.category==cat));
-}
-
-// Search
-function searchMedicine(){
-    let query = document.getElementById("searchBar").value.toLowerCase();
-    displayMedicines(medicines.filter(m=>m.name.toLowerCase().includes(query)));
-}
-
-// Invoice functions
-function addToInvoice(name,price){
-    let qty = parseInt(document.getElementById("qty-"+name).value) || 1;
-    invoiceItems.push({name:name,price:price,quantity:qty});
-    updateInvoice();
-}
-function updateInvoice(){
-    let container = document.getElementById("invoiceItems");
-    container.innerHTML="";
-    let total=0;
-    invoiceItems.forEach(item=>{
-        container.innerHTML+=`<p>${item.name} - Rs ${item.price} x ${item.quantity} = Rs ${item.price*item.quantity}</p>`;
-        total+=item.price*item.quantity;
-    });
-    document.getElementById("totalPrice").innerText=total;
-}
-function generateInvoice(){
-    billNo++;
-    document.getElementById("billNumber").innerText="Bill No: #"+billNo.toString().padStart(3,"0");
-    invoiceItems=[];
-    updateInvoice();
-}
-function printInvoice(){
-    let printContents = document.getElementById("invoiceBox").innerHTML;
-    let originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    location.reload();
-}
-
-// Dark mode
-function toggleDarkMode(){
-    document.body.classList.toggle("dark-mode");
-}
-
-// Add Medicine
-function addMedicinePrompt(){
-    let name = prompt("Medicine Name:");
-    let cat = prompt("Category:");
-    let use = prompt("Use:");
-    let price = prompt("Price:");
-    let stock = prompt("Stock:");
-    let expiry = prompt("Expiry Date (MM/YYYY):");
-    let img = prompt("Image URL (or leave blank):") || "https://images.unsplash.com/photo-1588776814546-06ffec3c850b";
-    medicines.push({name:name,category:cat,use:use,price:parseFloat(price),stock:parseInt(stock),expiry:expiry,img:img});
-    displayMedicines(medicines);
-}
-
-// Initial display
-displayMedicines(medicines);
-</script>
-
-</body>
-</html></div>
-
-<div class="card">
-<h3>Rigix Syrup</h3>
-<p>Use: Allergy, cold</p>
-<p>Price: Rs 120</p>
-</div>
-
-<div class="card">
-<h3>Disprin</h3>
-<p>Use: Headache</p>
-<p>Price: Rs 30</p>
-</div>
-
+  <!-- Main Content -->
+  <div class="main" id="medicineContainer">
+    <div class="card">
+      <img src="https://cdn.pixabay.com/photo/2017/01/10/19/05/pills-1960082_1280.jpg" alt="Medicine 1">
+      <h3>Paracetamol</h3>
+      <p>Use: Fever, Pain</p>
+      <p>Price: Rs 50</p>
+    </div>
+    <div class="card">
+      <img src="https://cdn.pixabay.com/photo/2018/03/10/18/05/tablets-3219539_1280.jpg" alt="Medicine 2">
+      <h3>Brufen</h3>
+      <p>Use: Pain Relief</p>
+      <p>Price: Rs 80</p>
+    </div>
+    <div class="card">
+      <img src="https://cdn.pixabay.com/photo/2016/12/06/18/27/pills-1883643_1280.jpg" alt="Medicine 3">
+      <h3>Rigix Syrup</h3>
+      <p>Use: Allergy, Cold</p>
+      <p>Price: Rs 120</p>
+    </div>
+    <!-- Add more medicine cards -->
+  </div>
 </div>
 
 <script>
-
-function signup(){
-let user=document.getElementById("newUser").value;
-let pass=document.getElementById("newPass").value;
-
-localStorage.setItem("user",user);
-localStorage.setItem("pass",pass);
-
-document.getElementById("msg").innerText="Signup successful!";
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('active');
 }
-
-function login(){
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-let savedUser=localStorage.getItem("user");
-let savedPass=localStorage.getItem("pass");
-
-if(user===savedUser && pass===savedPass){
-document.getElementById("loginPage").style.display="none";
-document.getElementById("dashboard").style.display="block";
-}else{
-document.getElementById("msg").innerText="Wrong login details";
-}
-}
-
 </script>
 
 </body>
 </html>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shayan Pharmacy Dashboard</title>
-<link href="style.css" rel="stylesheet">
-</head>
-<body>
-
-<div class="dashboard-container">
-    <div class="sidebar">
-        <h2>💊 Shayan Pharmacy</h2>
-        <p onclick="filterCategory('all')">Dashboard</p>
-        <p onclick="filterCategory('Tablet')">Tablets</p>
-        <p onclick="filterCategory('Syrup')">Syrups</p>
-        <p onclick="filterCategory('Antibiotic')">Antibiotics</p>
-        <button onclick="toggleDarkMode()">Dark Mode</button>
-        <button onclick="addMedicinePrompt()">Add Medicine</button>
-    </div>
-
-    <div class="main">
-        <h2>Medicine Dashboard</h2>
-        <input type="text" id="searchBar" placeholder="Search medicine..." onkeyup="searchMedicine()">
-
-        <div class="tabs">
-            <div class="tab active" onclick="filterCategory('all')">All</div>
-            <div class="tab" onclick="filterCategory('Tablet')">Tablets</div>
-            <div class="tab" onclick="filterCategory('Syrup')">Syrups</div>
-            <div class="tab" onclick="filterCategory('Antibiotic')">Antibiotics</div>
-        </div>
-
-        <div id="medicineList"></div>
-
-        <div id="invoiceBox">
-            <h3>Invoice</h3>
-            <p id="billNumber">Bill No: #001</p>
-            <div id="invoiceItems"></div>
-            <p><strong>Total: Rs <span id="totalPrice">0</span></strong></p>
-            <button onclick="printInvoice()">Print Invoice</button>
-        </div>
-    </div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
-body, html{
-    margin:0;
-    padding:0;
-    font-family:'Roboto', sans-serif;
-}
-
-.landing{
-    width:100%;
-    height:100vh;
-    background:url('images/landing-bg.jpg') no-repeat center center/cover;
-    position:relative;
-}
-.overlay{
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:white;
-}
-.overlay h1{
-    font-size:3em;
-    margin-bottom:20px;
-}
-.overlay button{
-    padding:15px 25px;
-    font-size:1em;
-    background:#007bff;
-    color:white;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-}
-.overlay button:hover{
-    background:#0056b3;
-}
-
-/* Dashboard */
-.dashboard-container{
-    display:flex;
-    min-height:100vh;
-}
-.sidebar{
-    width:220px;
-    background:#111;
-    color:white;
-    padding:20px;
-}
-.sidebar h2{
-    color:#00d4ff;
-    text-align:center;
-    margin-bottom:20px;
-}
-.sidebar p, .sidebar button{
-    padding:10px;
-    border:none;
-    border-radius:5px;
-    margin-bottom:10px;
-    width:100%;
-    text-align:left;
-    cursor:pointer;
-}
-.sidebar p:hover, .sidebar button:hover{
-    background:#333;
-}
-
-.main{
-    flex:1;
-    padding:20px;
-    background:rgba(255,255,255,0.95);
-}
-
-.tabs{
-    display:flex;
-    margin-bottom:15px;
-}
-.tab{
-    padding:10px 15px;
-    cursor:pointer;
-    background:#007bff;
-    color:white;
-    border-radius:5px 5px 0 0;
-    margin-right:5px;
-}
-.tab.active{
-    background:#0056b3;
-}
-
-/* Cards */
-.card{
-    background:white;
-    padding:15px;
-    margin:10px;
-    border-radius:10px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
-    display:flex;
-    align-items:center;
-    transition:0.3s;
-}
-.card:hover{
-    transform:scale(1.03);
-    box-shadow:0 8px 20px rgba(0,0,0,0.2);
-}
-.card img{
-    width:80px;
-    height:80px;
-    object-fit:cover;
-    border-radius:10px;
-    margin-right:15px;
-}
-.card-info{
-    flex:1;
-}
-.card-info input{
-    width:50px;
-    padding:5px;
-    margin-right:5px;
-}
-
-/* Invoice */
-#invoiceBox{
-    background:#f8f9fa;
-    padding:15px;
-    border-radius:10px;
-    margin-top:20px;
-}
-#invoiceBox button{
-    margin-top:10px;
-}
-
-/* Dark mode */
-.dark-mode{
-    background:#1a1a1a;
-    color:white;
-}
-// Preloaded Medicines
-let medicines = JSON.parse(localStorage.getItem("medicines")) || [
-    {name:"Paracetamol",category:"Tablet",use:"Fever, headache",price:50,stock:120,expiry:"12/2025",img:"images/paracetamol.jpg"},
-    {name:"Brufen",category:"Tablet",use:"Pain relief",price:80,stock:90,expiry:"03/2025",img:"images/brufen.jpg"},
-    {name:"Rigix Syrup",category:"Syrup",use:"Allergy, cold",price:120,stock:60,expiry:"11/2024",img:"images/rigix.jpg"},
-    {name:"Augmentin",category:"Antibiotic",use:"Infection treatment",price:450,stock:40,expiry:"08/2025",img:"images/augmentin.jpg"}
-];
-
-let billNo = 1;
-let invoiceItems=[];
-
-// Display medicines
-function displayMedicines(list){
-    localStorage.setItem("medicines", JSON.stringify(medicines));
-    let container = document.getElementById("medicineList");
-    container.innerHTML="";
-    list.forEach(med=>{
-        let div = document.createElement("div");
-        div.className="card";
-        div.innerHTML=`<img src="${med.img}" alt="${med.name}">
-        <div class="card-info">
-        <h3>${med.name}</h3>
-        <p>Category: ${med.category}</p>
-        <p>Use: ${med.use}</p>
-        <p>Price: Rs ${med.price}</p>
-        <p>Stock: ${med.stock}</p>
-        <p>Expiry: ${med.expiry}</p>
-        <input type="number" id="qty-${med.name}" placeholder="Qty" min="1">
-        <button onclick="addToInvoice('${med.name}',${med.price})">Add to Invoice</button>
-        </div>`;
-        container.appendChild(div);
-    });
-}
-
-// Category filter
-function filterCategory(cat){
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    event.target.classList.add('active');
-    if(cat=="all") displayMedicines(medicines);
-    else displayMedicines(medicines.filter(m=>m.category==cat));
-}
-
-// Search
-function searchMedicine(){
-    let query = document.getElementById("searchBar").value.toLowerCase();
-    displayMedicines(medicines.filter(m=>m.name.toLowerCase().includes(query)));
-}
-
-// Invoice
-function addToInvoice(name,price){
-    let qty = parseInt(document.getElementById("qty-"+name).value) || 1;
-    invoiceItems.push({name:name,price:price,quantity:qty});
-    updateInvoice();
-}
-function updateInvoice(){
-    let container = document.getElementById("invoiceItems");
-    container.innerHTML="";
-    let total=0;
-    invoiceItems.forEach(item=>{
-        container.innerHTML+=`<p>${item.name} - Rs ${item.price} x ${item.quantity} = Rs ${item.price*item.quantity}</p>`;
-        total+=item.price*item.quantity;
-    });
-    document.getElementById("totalPrice").innerText=total;
-}
-function printInvoice(){
-    let printContents = document.getElementById("invoiceBox").innerHTML;
-    let originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    location.reload();
-}
-
-// Dark mode
-function toggleDarkMode(){
-    document.body.classList.toggle("dark-mode");
-}
-
-// Add Medicine
-function addMedicinePrompt(){
-    let name = prompt("Medicine Name:");
-    let cat = prompt("Category:");
-    let use = prompt("Use:");
-    let price = prompt("Price:");
-    let stock = prompt("Stock:");
-    let expiry = prompt("Expiry Date (MM/YYYY):");
-    let img = prompt("Image URL (or leave blank):") || "images/default.jpg";
-    medicines.push({name:name,category:cat,use:use,price:parseFloat(price),stock:parseInt(stock),expiry:expiry,img:img});
-    displayMedicines(medicines);
-}
-
-// Initial display
-displayMedicines(medicines);
