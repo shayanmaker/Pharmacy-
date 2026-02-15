@@ -1,145 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shayan Movies HTML Only</title>
+<title>Shayan Movies</title>
+
 <style>
-body{margin:0;font-family:Arial;background:#111;color:#fff;}
-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#000;position:sticky;top:0;z-index:10;}
-header h1{margin:0;color:#00d4ff;}
-.search-box input{padding:8px;width:250px;border:none;border-radius:5px;}
-.categories-container{padding:10px 0 0 20px;}
-.category-title{font-size:18px;margin-bottom:5px;}
-.category{display:flex;gap:15px;overflow-x:auto;padding-bottom:20px;}
-.category::-webkit-scrollbar{height:8px;}
-.category::-webkit-scrollbar-thumb{background:#00d4ff;border-radius:4px;}
-.card{min-width:180px;background:#222;border-radius:10px;overflow:hidden;text-align:center;cursor:pointer;transition:transform 0.3s;}
-.card:hover{transform:scale(1.05);}
-.card img{width:100%;height:270px;object-fit:cover;}
-.card h3{font-size:14px;padding:5px;margin:0;}
-.card p{font-size:12px;color:#ccc;margin:0 0 5px 0;}
-.hero-slider{position:relative;width:100%;height:350px;overflow:hidden;margin-bottom:20px;}
-.hero-slider img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;opacity:0;transition:opacity 1s;}
-.hero-slider img.active{opacity:1;}
-#popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:20;overflow:auto;}
-#popup img{width:300px;border-radius:10px;margin-bottom:10px;}
-#popup h2{margin:10px 0;}
-#popup p{max-width:600px;text-align:center;}
-#popup iframe{width:560px;height:315px;margin-top:15px;border:none;}
-#popup button{margin-top:15px;padding:10px 20px;background:#00d4ff;border:none;cursor:pointer;border-radius:5px;}
+body{
+margin:0;
+font-family:Arial;
+background:#0b0b0b;
+color:white;
+}
+
+/* Sidebar */
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:220px;
+height:100%;
+background:#111;
+padding-top:20px;
+}
+
+.sidebar h2{
+text-align:center;
+color:#00e5ff;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+color:white;
+text-decoration:none;
+border-bottom:1px solid #222;
+}
+
+.sidebar a:hover{
+background:#00e5ff;
+color:black;
+}
+
+/* Main */
+.main{
+margin-left:220px;
+padding:20px;
+}
+
+/* Hero */
+.hero{
+width:100%;
+height:300px;
+background:url('https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=1600') center/cover;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+font-weight:bold;
+border-radius:10px;
+}
+
+/* Movies grid */
+.movies{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.card{
+width:200px;
+background:#111;
+border-radius:10px;
+overflow:hidden;
+transition:0.3s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:270px;
+object-fit:cover;
+}
+
+.card h4{
+padding:5px;
+margin:0;
+font-size:14px;
+}
+
+/* Popup */
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
+
+.popup iframe{
+width:560px;
+height:315px;
+}
+
+.closeBtn{
+margin-top:10px;
+padding:10px 20px;
+background:#00e5ff;
+border:none;
+cursor:pointer;
+}
+
 </style>
 </head>
+
 <body>
 
-<header>
-<h1>Shayan Movies</h1>
-<div class="search-box">
-<input type="text" id="search" placeholder="Search movie..." onkeyup="searchMovie()">
+<!-- Background Music -->
+<audio autoplay loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="sidebar">
+<h2>Shayan</h2>
+
+<a href="#">Dashboard</a>
+<a href="#">Trailers</a>
+
+<!-- MOVIE SITES SECTION -->
+<a href="LINK1">https://bolly4u.gifts/ 1</a>
+<a href="LINK2">https://new.katmoviehd.cymru/ 2</a>
+<a href="LINK3">https://9xflix.horse/m/ 3</a>
+
 </div>
-</header>
 
-<div class="hero-slider" id="heroSlider"></div>
-<div class="categories-container" id="categoriesContainer"></div>
+<div class="main">
 
-<div id="popup">
-<button onclick="closePopup()">Close</button>
-<img id="popupImg" src="">
-<h2 id="popupTitle"></h2>
-<p id="popupOverview"></p>
-<iframe id="trailerFrame" src="" allowfullscreen></iframe>
+<div class="hero">
+Welcome to Shayan Movies
+</div>
+
+<h2>Latest Trailers</h2>
+
+<div class="movies">
+
+<div class="card" onclick="playTrailer('https://www.youtube.com/embed/eOrNdBpGMv8')">
+<img src="https://m.media-amazon.com/images/I/81G+K4j5GxL._AC_SY679_.jpg">
+<h4>Avengers</h4>
+</div>
+
+<div class="card" onclick="playTrailer('https://www.youtube.com/embed/k8YiqM0Y-78')">
+<img src="https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg">
+<h4>Jawan</h4>
+</div>
+
+<div class="card" onclick="playTrailer('https://www.youtube.com/embed/EXeTwQWrcwY')">
+<img src="https://m.media-amazon.com/images/I/91z1JXoQ8BL._AC_SY679_.jpg">
+<h4>The Dark Knight</h4>
+</div>
+
+</div>
+</div>
+
+<!-- Trailer Popup -->
+<div class="popup" id="popup">
+<iframe id="trailerFrame" src=""></iframe>
+<button class="closeBtn" onclick="closeTrailer()">Close</button>
 </div>
 
 <script>
-// ------------------ SAMPLE DATA ------------------
-const categories = ['Popular','Top Rated','Upcoming'];
-const IMG_PATH = "https://source.unsplash.com/200x270/?movie,cinema,poster"; // Placeholder images
-const moviesData = {};
-
-// Generate 20 sample movies per category
-categories.forEach(cat=>{
-  moviesData[cat]=[];
-  for(let i=1;i<=20;i++){
-    moviesData[cat].push({
-      title:`${cat} Movie ${i}`,
-      overview:`Description for ${cat} Movie ${i}. This is a sample overview.`,
-      poster_path:IMG_PATH+"?"+i,
-      trailer:`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(cat+' Movie '+i+' trailer')}`,
-      rating:(Math.random()*5+5).toFixed(1)
-    });
-  }
-});
-
-// ------------------ HERO SLIDER ------------------
-let heroIndex=0;
-function showHeroSlider(){
-  const slider=document.getElementById('heroSlider');
-  slider.innerHTML='';
-  const heroMovies = moviesData['Popular'].slice(0,5);
-  heroMovies.forEach((m,i)=>{
-    const img=document.createElement('img');
-    img.src=m.poster_path;
-    if(i===0) img.classList.add('active');
-    slider.appendChild(img);
-  });
-  setInterval(()=>{
-    const imgs=slider.querySelectorAll('img');
-    imgs.forEach(im=>im.classList.remove('active'));
-    imgs[heroIndex].classList.add('active');
-    heroIndex=(heroIndex+1)%imgs.length;
-  },4000);
+function playTrailer(link){
+document.getElementById("popup").style.display="flex";
+document.getElementById("trailerFrame").src=link;
 }
 
-// ------------------ RENDER CATEGORIES ------------------
-function renderCategories(){
-  const container=document.getElementById('categoriesContainer');
-  categories.forEach(cat=>{
-    const div=document.createElement('div');
-    div.innerHTML=`<div class="category-title">${cat}</div><div class="category" id="cat-${cat}"></div>`;
-    container.appendChild(div);
-    const catDiv=document.getElementById(`cat-${cat}`);
-    moviesData[cat].forEach(m=>{
-      const card=document.createElement('div');
-      card.classList.add('card');
-      card.innerHTML=`<img src="${m.poster_path}"><h3>${m.title}</h3><p>Rating: ${m.rating}</p>`;
-      card.onclick=()=>openPopup(m);
-      catDiv.appendChild(card);
-    });
-  });
+function closeTrailer(){
+document.getElementById("popup").style.display="none";
+document.getElementById("trailerFrame").src="";
 }
-
-// ------------------ SEARCH ------------------
-function searchMovie(){
-  const query=document.getElementById('search').value.toLowerCase();
-  categories.forEach(cat=>{
-    const catDiv=document.getElementById(`cat-${cat}`);
-    catDiv.innerHTML='';
-    moviesData[cat].filter(m=>m.title.toLowerCase().includes(query)).forEach(m=>{
-      const card=document.createElement('div');
-      card.classList.add('card');
-      card.innerHTML=`<img src="${m.poster_path}"><h3>${m.title}</h3><p>Rating: ${m.rating}</p>`;
-      card.onclick=()=>openPopup(m);
-      catDiv.appendChild(card);
-    });
-  });
-}
-
-// ------------------ POPUP ------------------
-function openPopup(movie){
-  document.getElementById('popup').style.display='flex';
-  document.getElementById('popupImg').src=movie.poster_path;
-  document.getElementById('popupTitle').innerText=movie.title;
-  document.getElementById('popupOverview').innerText=movie.overview;
-  document.getElementById('trailerFrame').src=movie.trailer;
-}
-function closePopup(){
-  document.getElementById('popup').style.display='none';
-  document.getElementById('trailerFrame').src='';
-}
-
-// ------------------ INITIALIZE ------------------
-showHeroSlider();
-renderCategories();
 </script>
 
 </body>
