@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shayan Pharmacy</title>
 <style>
-/* Global */
 body{
   margin:0;
   font-family: Arial, sans-serif;
@@ -21,7 +20,6 @@ body{
   padding:20px;
   box-sizing:border-box;
 }
-
 /* Header */
 header{
   display:flex;
@@ -35,23 +33,45 @@ header{
   z-index:10;
 }
 header h1{ margin:0; font-size:2em; color:#00d4ff;}
-.menu{ display:flex; gap:10px;}
-.menu p{
-  margin:0; padding:8px 12px;
-  background: rgba(0,212,255,0.2);
-  border-radius:5px;
+.menu-btn{
   cursor:pointer;
+  font-size:1.2em;
+  background: rgba(0,212,255,0.2);
+  padding:8px 12px;
+  border-radius:5px;
 }
-.menu p:hover{ background: rgba(0,212,255,0.5); color:#000; }
 
-/* Main Medicine Cards */
+/* Sidebar */
+.sidebar{
+  position: fixed;
+  top:0;
+  left: -250px;
+  width:250px;
+  height:100%;
+  background: rgba(0,0,0,0.95);
+  padding:20px;
+  box-sizing:border-box;
+  transition:0.3s;
+  z-index:20;
+}
+.sidebar.active{ left:0; }
+.sidebar h2{ color:#00d4ff; margin-bottom:15px;}
+.sidebar p{
+  cursor:pointer;
+  padding:10px;
+  border-radius:5px;
+  background: rgba(0,212,255,0.2);
+  margin-bottom:5px;
+}
+.sidebar p:hover{ background: rgba(0,212,255,0.5); color:#000; }
+
+/* Main Horizontal Cards */
 .main{
   margin-top:80px;
+  padding:20px;
   display:flex;
-  flex-wrap: nowrap;
   overflow-x: auto;
   gap:15px;
-  padding:20px;
 }
 .card{
   min-width:250px;
@@ -80,15 +100,16 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 /* Slide Box */
 .slide-box{
   position: fixed;
-  top:80px;
+  top:0;
   right: -450px;
   width:450px;
-  height: calc(100% - 80px);
+  height:100%;
   background: rgba(0,0,0,0.95);
   padding:20px;
   box-sizing:border-box;
   transition:0.3s;
-  overflow-y: auto;
+  overflow-y:auto;
+  z-index:15;
 }
 .slide-box.active{ right:0; }
 .slide-box h2{ color:#00d4ff; margin-bottom:15px; }
@@ -127,14 +148,18 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 
 <header>
   <h1>Shayan Pharmacy</h1>
-  <div class="menu">
-    <p onclick="openSlide('medicine')">Medicine</p>
-    <p onclick="openSlide('invoice')">Invoice</p>
-    <p onclick="openSlide('add')">Add Medicine</p>
-    <p onclick="openSlide('orders')">Orders</p>
-    <p onclick="openSlide('contact')">Contact</p>
-  </div>
+  <div class="menu-btn" onclick="toggleSidebar()">☰ Menu</div>
 </header>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <h2>Menu</h2>
+  <p onclick="openSlide('medicine')">Medicine</p>
+  <p onclick="openSlide('invoice')">Invoice</p>
+  <p onclick="openSlide('add')">Add Medicine</p>
+  <p onclick="openSlide('orders')">Orders</p>
+  <p onclick="openSlide('contact')">Contact</p>
+</div>
 
 <!-- Main Horizontal Cards -->
 <div class="main" id="medicineContainer"></div>
@@ -148,7 +173,7 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 </div>
 
 <script>
-// Background images random doctor/medicine
+// Background images auto-change
 const backgrounds = [
   'https://cdn.pixabay.com/photo/2020/03/11/18/28/doctor-650534_1920.jpg',
   'https://cdn.pixabay.com/photo/2016/11/29/05/08/medication-1866782_1280.jpg',
@@ -163,18 +188,18 @@ function changeBackground(){
 setInterval(changeBackground,5000);
 changeBackground();
 
-// Generate 200 medicines
+// Generate 200 medicines with name + images
 let medicines=[];
 for(let i=1;i<=200;i++){
   medicines.push({
     name:`Medicine ${i}`,
     use:`For condition ${i}`,
     price:Math.floor(Math.random()*500)+50,
-    img:`https://picsum.photos/200/150?random=${i}`
+    img:`https://source.unsplash.com/200x150/?medicine,drug,tablet,${i}`
   });
 }
 
-// Render cards
+// Render medicine cards
 function renderMedicines(filter=''){
   const container=document.getElementById('medicineContainer');
   container.innerHTML='';
@@ -190,6 +215,11 @@ function renderMedicines(filter=''){
   });
 }
 renderMedicines();
+
+// Sidebar toggle
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('active');
+}
 
 // Slide Box
 function openSlide(option){
@@ -224,7 +254,7 @@ function closeSlide(){
   document.getElementById('slideBox').classList.remove('active');
 }
 
-// Add medicine
+// Add medicine dynamically
 function addMedicine(){
   const name=document.getElementById('medName').value;
   const use=document.getElementById('medUse').value;
