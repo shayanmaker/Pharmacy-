@@ -5,25 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shayan Pharmacy</title>
 <style>
-/* ---------------------- Global ------------------------ */
+/* ------------------ Global ------------------ */
 body{
   margin:0;
   font-family: Arial, sans-serif;
-  background: url('https://cdn.pixabay.com/photo/2020/03/11/18/28/doctor-650534_1920.jpg') no-repeat center center fixed;
-  background-size: cover;
   color:#fff;
   overflow-x: hidden;
+  transition: background 1s;
 }
+
+/* Overlay for readability */
 .overlay{
   position:absolute;
   top:0; left:0;
   width:100%; height:100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.5);
   padding:20px;
   box-sizing:border-box;
 }
 
-/* ---------------------- Header ------------------------ */
+/* ------------------ Header ------------------ */
 header{
   display:flex;
   justify-content: space-between;
@@ -47,7 +48,7 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 }
 .menu p:hover{ background: rgba(0,212,255,0.5); color:#000; }
 
-/* ---------------------- Main ------------------------ */
+/* ------------------ Main ------------------ */
 .main{
   margin-top:80px;
   padding:20px;
@@ -68,18 +69,18 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 .card h3{ margin:10px 0 5px;}
 .card p{ margin:5px 0; }
 
-/* ---------------------- Slide Box ------------------------ */
+/* ------------------ Slide Box ------------------ */
 .slide-box{
   position: fixed;
   top:80px;
-  right: -400px;
-  width:400px;
+  right: -450px;
+  width:450px;
   height: calc(100% - 80px);
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95);
   padding:20px;
   box-sizing:border-box;
   transition:0.3s;
-  overflow-y:auto;
+  overflow-y: auto;
 }
 .slide-box.active{ right:0; }
 .slide-box h2{ color:#00d4ff; margin-bottom:15px; }
@@ -93,23 +94,27 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
   margin-bottom:10px;
 }
 
-/* ---------------------- Search ------------------------ */
-.search-box{
-  margin-bottom:15px;
-}
-.search-box input{
+/* ------------------ Form Inputs ------------------ */
+.search-box input, .search-box button{
   padding:8px;
-  width:80%;
+  margin-bottom:5px;
+  width:100%;
   border-radius:5px;
   border:none;
 }
 .search-box button{
-  padding:8px 10px;
-  border-radius:5px;
-  border:none;
   background:#00d4ff;
-  cursor:pointer;
   color:#000;
+  cursor:pointer;
+}
+
+/* Scrollbar styling */
+.main::-webkit-scrollbar {
+  height:10px;
+}
+.main::-webkit-scrollbar-thumb {
+  background:#00d4ff;
+  border-radius:5px;
 }
 </style>
 </head>
@@ -130,7 +135,7 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 
 <!-- Main Medicine Cards -->
 <div class="main" id="medicineContainer">
-  <!-- Cards dynamically added by JS -->
+  <!-- Cards generated dynamically -->
 </div>
 
 <!-- Slide Box -->
@@ -144,63 +149,92 @@ header h1{ margin:0; font-size:2em; color:#00d4ff;}
 </div>
 
 <script>
-let medicines = [
-  {name:"Paracetamol", use:"Fever, Pain", price:50, img:"https://cdn.pixabay.com/photo/2017/01/10/19/05/pills-1960082_1280.jpg"},
-  {name:"Brufen", use:"Pain Relief", price:80, img:"https://cdn.pixabay.com/photo/2018/03/10/18/05/tablets-3219539_1280.jpg"},
-  {name:"Rigix Syrup", use:"Allergy, Cold", price:120, img:"https://cdn.pixabay.com/photo/2016/12/06/18/27/pills-1883643_1280.jpg"},
-  {name:"Cough Syrup", use:"Cough Relief", price:90, img:"https://cdn.pixabay.com/photo/2017/09/02/19/41/syrup-2700711_1280.jpg"}
+// Background images array
+const backgrounds = [
+  'https://cdn.pixabay.com/photo/2020/03/11/18/28/doctor-650534_1920.jpg',
+  'https://cdn.pixabay.com/photo/2016/11/29/05/08/medication-1866782_1280.jpg',
+  'https://cdn.pixabay.com/photo/2017/09/02/19/41/syrup-2700711_1280.jpg'
 ];
 
-// Function to render medicine cards
+// Change background every 5 seconds
+let bgIndex=0;
+function changeBackground(){
+  document.body.style.background=`url('${backgrounds[bgIndex]}') no-repeat center center fixed`;
+  document.body.style.backgroundSize='cover';
+  bgIndex=(bgIndex+1)%backgrounds.length;
+}
+setInterval(changeBackground,5000);
+changeBackground();
+
+// Generate 200+ medicines
+let medicines=[];
+for(let i=1;i<=200;i++){
+  medicines.push({
+    name:`Medicine ${i}`,
+    use:`Use for condition ${i}`,
+    price:Math.floor(Math.random()*500)+50,
+    img:`https://picsum.photos/200/140?random=${i}`
+  });
+}
+
+// Render medicine cards
 function renderMedicines(filter=''){
-  const container = document.getElementById('medicineContainer');
+  const container=document.getElementById('medicineContainer');
   container.innerHTML='';
-  let filtered = medicines.filter(m => m.name.toLowerCase().includes(filter.toLowerCase()));
+  let filtered = medicines.filter(m=>m.name.toLowerCase().includes(filter.toLowerCase()));
   filtered.forEach(m=>{
-    const card = document.createElement('div');
+    const card=document.createElement('div');
     card.className='card';
     card.innerHTML=`<img src="${m.img}" alt="${m.name}">
-    <h3>${m.name}</h3>
-    <p>Use: ${m.use}</p>
-    <p>Price: Rs ${m.price}</p>`;
+      <h3>${m.name}</h3>
+      <p>Use: ${m.use}</p>
+      <p>Price: Rs ${m.price}</p>`;
     container.appendChild(card);
   });
 }
 renderMedicines();
 
-// Slide Box
+// Slide box
 function openSlide(option){
   document.getElementById('slideBox').classList.add('active');
   const content = document.getElementById('slideContent');
+
   if(option==='medicine'){
-    content.innerHTML = '<h2>Medicine List</h2><p>'+medicines.map(m=>m.name+' - Rs '+m.price).join('<br>')+'</p>';
+    content.innerHTML='<h2>Medicine List</h2>';
+    medicines.forEach(m=>{
+      content.innerHTML+=`<p><strong>${m.name}</strong><br>Use: ${m.use}<br>Price: Rs ${m.price}</p><hr>`;
+    });
   } else if(option==='invoice'){
-    content.innerHTML = '<h2>Invoice</h2><p>Invoice #001 - Paracetamol x2 - Rs 100</p>';
+    content.innerHTML='<h2>Invoice</h2>';
+    medicines.slice(0,20).forEach((m,i)=>{
+      content.innerHTML+=`<p>Invoice #00${i+1}<br>${m.name} x1 - Rs ${m.price}</p><hr>`;
+    });
   } else if(option==='add'){
-    content.innerHTML = `<h2>Add Medicine</h2>
-    <div class="search-box">
-      <input type="text" id="medName" placeholder="Medicine Name">
-      <input type="text" id="medUse" placeholder="Use">
-      <input type="number" id="medPrice" placeholder="Price">
-      <input type="text" id="medImg" placeholder="Image URL">
-      <button onclick="addMedicine()">Add</button>
-    </div>`;
+    content.innerHTML=`<h2>Add Medicine</h2>
+      <div class="search-box">
+        <input type="text" id="medName" placeholder="Medicine Name">
+        <input type="text" id="medUse" placeholder="Use">
+        <input type="number" id="medPrice" placeholder="Price">
+        <input type="text" id="medImg" placeholder="Image URL">
+        <button onclick="addMedicine()">Add</button>
+      </div>`;
   } else if(option==='orders'){
-    content.innerHTML = '<h2>Orders</h2><p>No orders yet.</p>';
+    content.innerHTML='<h2>Orders</h2><p>No orders yet.</p>';
   } else if(option==='contact'){
-    content.innerHTML = '<h2>Contact</h2><p>Email: info@shayanpharmacy.com</p><p>Phone: 0300-XXXXXXX</p>';
+    content.innerHTML='<h2>Contact</h2><p>Email: info@shayanpharmacy.com</p><p>Phone: 0300-XXXXXXX</p>';
   }
 }
+
 function closeSlide(){
   document.getElementById('slideBox').classList.remove('active');
 }
 
-// Add Medicine dynamically
+// Add medicine dynamically
 function addMedicine(){
-  const name = document.getElementById('medName').value;
-  const use = document.getElementById('medUse').value;
-  const price = document.getElementById('medPrice').value;
-  const img = document.getElementById('medImg').value;
+  const name=document.getElementById('medName').value;
+  const use=document.getElementById('medUse').value;
+  const price=document.getElementById('medPrice').value;
+  const img=document.getElementById('medImg').value;
   if(name && use && price && img){
     medicines.push({name,use,price,img});
     renderMedicines();
